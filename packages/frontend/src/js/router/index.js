@@ -306,6 +306,7 @@ class Router {
         });
 
         this.container.innerHTML = html;
+        this.container.setAttribute('data-rendered', 'true');
         this.container.style.animation = 'route-enter-fade 0.3s ease forwards';
 
         // 滚动到顶部

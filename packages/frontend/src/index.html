@@ -7,15 +7,11 @@
   <meta name="theme-color" content="#0A0A1A">
   <title>Nova Blog</title>
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-
-  <!-- highlight.js 主题 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
 
-  <!-- CSS 样式 -->
   <link rel="stylesheet" href="/css/variables.css">
   <link rel="stylesheet" href="/css/base.css">
   <link rel="stylesheet" href="/css/components.css">
@@ -23,24 +19,33 @@
   <link rel="stylesheet" href="/admin/css/admin.css">
 </head>
 <body>
-  <!-- 应用根容器 -->
-  <div id="app"></div>
-
-  <!-- Toast 通知容器 -->
+  <div id="app">
+    <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;color:#9D9DBF;font-family:sans-serif;">
+      <div style="text-align:center;">
+        <div style="font-size:24px;color:#6C5CE7;">Nova Blog</div>
+        <div style="margin-top:8px;font-size:14px;">加载中...</div>
+      </div>
+    </div>
+  </div>
   <div id="toast-container"></div>
 
-  <!-- 第三方库 CDN -->
+  <script>
+    window.onerror = function(msg, url, line, col, err) {
+      console.error('[Nova Blog] JS Error:', msg, url, line, col);
+      var app = document.getElementById('app');
+      if (app && !app.getAttribute('data-rendered')) {
+        app.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;color:#EAEAFF;font-family:sans-serif;text-align:center;padding:20px;"><div><h1 style="font-size:48px;background:linear-gradient(135deg,#6C5CE7,#00F5D4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Nova Blog</h1><p style="color:#9D9DBF;margin:16px 0;">JavaScript 错误</p><p style="color:#6C6C8A;font-size:13px;max-width:500px;word-break:break-all;">' + msg + '</p><button onclick="location.reload()" style="margin-top:20px;padding:10px 24px;background:linear-gradient(135deg,#6C5CE7,#A29BFE);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;">重新加载</button></div></div>';
+      }
+      return false;
+    };
+    window.addEventListener('unhandledrejection', function(e) {
+      console.error('[Nova Blog] Unhandled Promise:', e.reason);
+    });
+  </script>
+
   <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
 
-  <!-- 应用 JS 模块 -->
-  <script src="/js/store/index.js"></script>
-  <script src="/js/api/index.js"></script>
-  <script src="/js/router/index.js"></script>
-  <script src="/js/utils/helpers.js"></script>
-  <script src="/js/components/editor.js"></script>
-  <script src="/js/pages/front.js"></script>
-  <script src="/js/pages/admin.js"></script>
-  <script src="/js/app.js"></script>
+  <script src="/js/bundle.js"></script>
 </body>
 </html>
