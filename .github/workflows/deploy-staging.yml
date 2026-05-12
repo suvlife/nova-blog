@@ -1,0 +1,153 @@
+# ============================================
+# 预发布部署工作流 - develop 分支推送触发
+# 部署到 staging 环境进行上线前验证
+# ============================================
+name: Deploy Staging
+
+on:
+  push:
+    branches: [develop]
+
+# 预发布环境允许取消进行中的部署，保留最新部署
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "20"
+
+jobs:
+  # ------------------------------------------
+  # 部署后端 Worker（Staging 环境）
+  # ------------------------------------------
+  deploy-backend:
+    name: Deploy Backend (Staging)
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 配置 Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: 安装依赖
+        run: npm ci
+
+      # 执行 D1 数据库远程迁移（Staging 环境）
+      - name: 执行 D1 数据库迁移（远程 - Staging）
+        working-directory: packages/backend
+        run: npx wrangler d1 migrations apply blog-db-staging --remote --env=staging
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      # 部署 Cloudflare Worker（Staging 环境）
+      - name: 部署 Worker（Staging）
+        working-directory: packages/backend
+        run: npx wrangler deploy --env=staging
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      # 设置 Worker Secrets（Staging 环境）
+      - name: 设置 Worker Secrets（Staging）
+        working-directory: packages/backend
+        run: |
+          # 逐个设置 Staging 环境所需的密钥
+          echo "${{ secrets.JWT_SECRET_STAGING }}" | npx wrangler secret put JWT_SECRET --env=staging
+          echo "${{ secrets.ADMIN_PASSWORD_STAGING }}" | npx wrangler secret put ADMIN_PASSWORD --env=staging
+          echo "${{ secrets.R2_PUBLIC_ACCESS_KEY }}" | npx wrangler secret put R2_PUBLIC_ACCESS_KEY --env=staging
+          echo "${{ secrets.R2_SECRET_ACCESS_KEY }}" | npx wrangler secret put R2_SECRET_ACCESS_KEY --env=staging
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+  # ------------------------------------------
+  # 部署前端 Pages（Staging 环境）
+  # ------------------------------------------
+  deploy-frontend:
+    name: Deploy Frontend (Staging)
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 配置 Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: 安装依赖
+        run: npm ci
+
+      # 构建前端（Staging 环境变量）
+      - name: 构建前端（Staging）
+        run: npm run build:frontend
+        env:
+          VITE_API_URL: "https://staging-api.blog.example.com"
+          VITE_BLOG_NAME: "My Cloudflare Blog (Staging)"
+
+      # 部署到 Cloudflare Pages（Staging 环境）
+      - name: 部署到 Cloudflare Pages（Staging）
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy packages/frontend/dist --project-name=nova-blog-frontend-staging --branch=develop
+          workingDirectory: "."
+
+  # ------------------------------------------
+  # 部署后验证（Staging 环境）
+  # ------------------------------------------
+  verify:
+    name: Post-deploy Verification (Staging)
+    runs-on: ubuntu-latest
+    needs: [deploy-backend, deploy-frontend]
+    steps:
+      # 等待部署生效
+      - name: 等待部署生效
+        run: sleep 30
+
+      # 健康检查：Staging 后端 API /health 端点
+      - name: 健康检查 - Staging 后端 API /health
+        run: |
+          echo "正在检查 Staging 后端 API 健康状态..."
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://staging-api.blog.example.com/health)
+          if [ "$HTTP_STATUS" -ne 200 ]; then
+            echo "Staging 后端健康检查失败！HTTP 状态码: $HTTP_STATUS"
+            exit 1
+          fi
+          echo "Staging 后端健康检查通过！HTTP 状态码: $HTTP_STATUS"
+
+      # 健康检查：Staging 前端首页 HTTP 200
+      - name: 健康检查 - Staging 前端首页
+        run: |
+          echo "正在检查 Staging 前端首页..."
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://staging.blog.example.com)
+          if [ "$HTTP_STATUS" -ne 200 ]; then
+            echo "Staging 前端健康检查失败！HTTP 状态码: $HTTP_STATUS"
+            exit 1
+          fi
+          echo "Staging 前端健康检查通过！HTTP 状态码: $HTTP_STATUS"
+
+      # 部署失败时发送通知
+      - name: 部署失败通知
+        if: failure()
+        run: |
+          echo "=========================================="
+          echo "Staging 部署验证失败！需要人工介入。"
+          echo "=========================================="
+          echo "请检查以下内容："
+          echo "  1. Cloudflare Dashboard 中 Worker 和 Pages 的部署状态"
+          echo "  2. D1 数据库迁移是否成功"
+          echo "  3. Worker Secrets 是否正确设置"
+          echo "  4. Staging 环境域名 DNS 解析是否正常"
+          # 此处可集成 Slack/Discord/钉钉/飞书 通知
+          # curl -X POST "$WEBHOOK_URL" -H 'Content-type: application/json' \
+          #   --data '{"text":"Staging 部署验证失败，请检查！"}'

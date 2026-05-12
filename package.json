@@ -1,0 +1,21 @@
+{
+  "name": "nova-blog",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Nova Blog - 基于 Cloudflare 全家桶的现代化博客系统",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:backend": "npm run dev --workspace=packages/backend",
+    "dev:frontend": "npm run dev --workspace=packages/frontend",
+    "build:backend": "npm run build --workspace=packages/backend",
+    "build:frontend": "npm run build --workspace=packages/frontend",
+    "deploy:backend": "npm run deploy --workspace=packages/backend",
+    "deploy:frontend": "npm run deploy --workspace=packages/frontend",
+    "db:migrate": "npm run db:migrate --workspace=packages/backend",
+    "db:seed": "npm run db:seed --workspace=packages/backend",
+    "lint": "npm run lint --workspaces",
+    "typecheck": "npm run typecheck --workspaces"
+  }
+}

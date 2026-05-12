@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Nova Blog - A modern tech blog powered by Cloudflare">
+  <meta name="theme-color" content="#0A0A1A">
+  <title>Nova Blog</title>
+
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/src/css/base.css">
+  <link rel="stylesheet" href="/src/css/components.css">
+  <link rel="stylesheet" href="/src/css/layout.css">
+  <link rel="stylesheet" href="/admin/css/admin.css">
+
+  <!-- Code Highlight Theme -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11/styles/atom-one-dark.min.css">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
+<body>
+  <!-- 应用根容器 -->
+  <div id="app">
+    <!-- 初始加载动画 -->
+    <div id="app-loader" style="
+      position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+      background:var(--bg-primary);z-index:9999;transition:opacity 0.5s ease;
+    ">
+      <div style="text-align:center;">
+        <div style="
+          width:48px;height:48px;border:3px solid var(--border-color);
+          border-top-color:var(--color-primary);border-radius:50%;
+          animation:spin 0.8s linear infinite;margin:0 auto var(--space-md);
+        "></div>
+        <p style="color:var(--text-tertiary);font-size:var(--text-sm);">Loading Nova Blog...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第三方库 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11/highlight.min.js"></script>
+
+  <!-- 应用脚本 -->
+  <script src="/src/js/store/index.js"></script>
+  <script src="/src/js/api/index.js"></script>
+  <script src="/src/js/router/index.js"></script>
+  <script src="/src/js/utils/helpers.js"></script>
+  <script src="/src/js/components/editor.js"></script>
+  <script src="/src/js/pages/front.js"></script>
+  <script src="/src/js/pages/admin.js"></script>
+  <script src="/src/js/app.js"></script>
+
+  <!-- 移除加载动画 -->
+  <script>
+    window.addEventListener('routeChanged', function removeLoader() {
+      const loader = document.getElementById('app-loader');
+      if (loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => loader.remove(), 500);
+      }
+      window.removeEventListener('routeChanged', removeLoader);
+    });
+  </script>
+</body>
+</html>

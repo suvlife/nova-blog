@@ -1,0 +1,150 @@
+/**
+ * Nova Blog - 设计系统核心变量
+ * 科技感深色主题配色方案
+ */
+
+:root {
+  /* ========== 主色调 - 赛博蓝紫渐变 ========== */
+  --color-primary: #6C5CE7;
+  --color-primary-light: #A29BFE;
+  --color-primary-dark: #4A3DB5;
+  --color-primary-glow: rgba(108, 92, 231, 0.4);
+
+  /* ========== 辅助色 ========== */
+  --color-accent: #00F5D4;
+  --color-accent-light: #72EFDD;
+  --color-accent-dark: #00C9A7;
+  --color-accent-glow: rgba(0, 245, 212, 0.3);
+
+  --color-secondary: #FD79A8;
+  --color-secondary-light: #FDCB6E;
+  --color-secondary-glow: rgba(253, 121, 168, 0.3);
+
+  --color-warning: #FDCB6E;
+  --color-danger: #FF6B6B;
+  --color-danger-glow: rgba(255, 107, 107, 0.3);
+  --color-success: #00F5D4;
+  --color-info: #74B9FF;
+
+  /* ========== 背景色系 - 深空黑 ========== */
+  --bg-primary: #0A0A1A;
+  --bg-secondary: #12122A;
+  --bg-tertiary: #1A1A3E;
+  --bg-card: #16163A;
+  --bg-card-hover: #1E1E4A;
+  --bg-elevated: #1F1F4A;
+  --bg-overlay: rgba(10, 10, 26, 0.85);
+  --bg-glass: rgba(22, 22, 58, 0.6);
+
+  /* ========== 文本色系 ========== */
+  --text-primary: #EAEAFF;
+  --text-secondary: #9D9DBF;
+  --text-tertiary: #6C6C8A;
+  --text-accent: #00F5D4;
+  --text-inverse: #0A0A1A;
+
+  /* ========== 边框 ========== */
+  --border-color: rgba(108, 92, 231, 0.2);
+  --border-color-hover: rgba(108, 92, 231, 0.5);
+  --border-color-active: rgba(0, 245, 212, 0.5);
+  --border-glow: rgba(108, 92, 231, 0.6);
+
+  /* ========== 渐变 ========== */
+  --gradient-primary: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 100%);
+  --gradient-accent: linear-gradient(135deg, #00F5D4 0%, #6C5CE7 100%);
+  --gradient-hero: linear-gradient(135deg, #0A0A1A 0%, #1A1A3E 50%, #0A0A1A 100%);
+  --gradient-card: linear-gradient(145deg, rgba(22, 22, 58, 0.8) 0%, rgba(26, 26, 62, 0.6) 100%);
+  --gradient-glow: radial-gradient(ellipse at center, rgba(108, 92, 231, 0.15) 0%, transparent 70%);
+  --gradient-border: linear-gradient(135deg, rgba(108, 92, 231, 0.5), rgba(0, 245, 212, 0.5));
+
+  /* ========== 间距 ========== */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 96px;
+
+  /* ========== 圆角 ========== */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* ========== 字体 ========== */
+  --font-sans: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+  --font-display: 'Inter', 'SF Pro Display', -apple-system, sans-serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
+
+  --leading-tight: 1.25;
+  --leading-normal: 1.6;
+  --leading-relaxed: 1.75;
+
+  /* ========== 阴影 ========== */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 20px var(--color-primary-glow);
+  --shadow-accent-glow: 0 0 20px var(--color-accent-glow);
+
+  /* ========== 动画 ========== */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ========== 层级 ========== */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-tooltip: 600;
+
+  /* ========== 布局 ========== */
+  --header-height: 72px;
+  --sidebar-width: 260px;
+  --sidebar-collapsed-width: 72px;
+  --content-max-width: 1200px;
+  --content-padding: var(--space-lg);
+}
+
+/* ========== 浅色主题（可选） ========== */
+[data-theme="light"] {
+  --bg-primary: #F5F5FF;
+  --bg-secondary: #EDEDFF;
+  --bg-tertiary: #DDDDFF;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F0F0FF;
+  --bg-elevated: #FFFFFF;
+  --bg-overlay: rgba(245, 245, 255, 0.85);
+  --bg-glass: rgba(255, 255, 255, 0.6);
+
+  --text-primary: #1A1A3E;
+  --text-secondary: #4A4A6A;
+  --text-tertiary: #7A7A9A;
+
+  --border-color: rgba(108, 92, 231, 0.15);
+  --border-color-hover: rgba(108, 92, 231, 0.3);
+
+  --shadow-sm: 0 2px 8px rgba(108, 92, 231, 0.08);
+  --shadow-md: 0 4px 16px rgba(108, 92, 231, 0.12);
+  --shadow-lg: 0 8px 32px rgba(108, 92, 231, 0.16);
+}

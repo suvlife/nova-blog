@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Nova Blog - 深空赛博风格的个人博客系统">
+  <meta name="theme-color" content="#0A0A1A">
+  <title>Nova Blog</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+  <!-- highlight.js 主题 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
+
+  <!-- CSS 样式 -->
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/admin/css/admin.css">
+</head>
+<body>
+  <!-- 应用根容器 -->
+  <div id="app"></div>
+
+  <!-- Toast 通知容器 -->
+  <div id="toast-container"></div>
+
+  <!-- 第三方库 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+
+  <!-- 应用 JS 模块 -->
+  <script src="/js/store/index.js"></script>
+  <script src="/js/api/index.js"></script>
+  <script src="/js/router/index.js"></script>
+  <script src="/js/utils/helpers.js"></script>
+  <script src="/js/components/editor.js"></script>
+  <script src="/js/pages/front.js"></script>
+  <script src="/js/pages/admin.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

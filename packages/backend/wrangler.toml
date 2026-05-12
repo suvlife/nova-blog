@@ -1,0 +1,58 @@
+name = "nova-blog-api"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+
+[vars]
+ENVIRONMENT = "development"
+CORS_ORIGIN = "http://localhost:8788"
+MAX_UPLOAD_SIZE_MB = "10"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "blog-db"
+database_id = "48f1825e-edba-433d-b581-30671ec8a5ba"
+migrations_dir = "migrations"
+
+[[r2_buckets]]
+binding = "STORAGE"
+bucket_name = "blog-assets"
+
+[[kv_namespaces]]
+binding = "CACHE"
+id = "dd87b2e4f9ea4e84a05a13d75334065a"
+
+[[kv_namespaces]]
+binding = "AUTH"
+id = "84e1e602eb054be09a51700948f03ac5"
+
+[triggers]
+crons = ["0 3 * * *"]
+
+[env.production]
+name = "nova-blog-api"
+[env.production.vars]
+ENVIRONMENT = "production"
+CORS_ORIGIN = "https://blog.guofeng.me"
+MAX_UPLOAD_SIZE_MB = "10"
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "blog-db"
+database_id = "48f1825e-edba-433d-b581-30671ec8a5ba"
+migrations_dir = "migrations"
+
+[[env.production.r2_buckets]]
+binding = "STORAGE"
+bucket_name = "blog-assets"
+
+[[env.production.kv_namespaces]]
+binding = "CACHE"
+id = "dd87b2e4f9ea4e84a05a13d75334065a"
+
+[[env.production.kv_namespaces]]
+binding = "AUTH"
+id = "84e1e602eb054be09a51700948f03ac5"
+
+[[env.production.routes]]
+pattern = "api.blog.guofeng.me/*"
+zone_name = "guofeng.me"

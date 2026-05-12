@@ -1,0 +1,13 @@
+{
+  "name": "@nova-blog/frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx wrangler pages dev ./src --port 8788",
+    "build": "echo 'Static site, no build needed'",
+    "deploy": "npx wrangler pages deploy ./src --project-name=nova-blog-frontend"
+  },
+  "devDependencies": {
+    "wrangler": "^3.60.0"
+  }
+}
