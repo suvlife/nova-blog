@@ -7,8 +7,8 @@
 const NovaFront = (() => {
   'use strict';
 
-  const H = NovaHelpers;
-  const store = NovaStore;
+  const H = window.NovaHelpers;
+  const store = window.NovaStore;
 
   /**
    * 渲染导航栏

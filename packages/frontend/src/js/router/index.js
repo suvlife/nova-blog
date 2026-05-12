@@ -25,8 +25,20 @@ class Router {
    * @param {Object} meta - 路由元信息
    */
   addRoute(path, handler, meta = {}) {
-    // 将路径转换为正则表达式
     const paramNames = [];
+
+    if (path === '*') {
+      this.routes.push({
+        path,
+        regex: null,
+        paramNames: [],
+        handler,
+        meta,
+        isWildcard: true
+      });
+      return;
+    }
+
     const regexPath = path.replace(/:(\w+)/g, (_, paramName) => {
       paramNames.push(paramName);
       return '([^/]+)';
@@ -114,9 +126,17 @@ class Router {
 
     // 遍历路由表进行匹配
     for (const route of this.routes) {
+      if (route.isWildcard) {
+        return {
+          route,
+          params: {},
+          query,
+          path: pathname
+        };
+      }
+
       const match = pathname.match(route.regex);
       if (match) {
-        // 提取动态参数
         const params = {};
         route.paramNames.forEach((name, index) => {
           params[name] = decodeURIComponent(match[index + 1]);

@@ -268,9 +268,7 @@ class ApiClient {
 }
 
 // 创建默认 API 实例
-const API_BASE = window.location.hostname === 'localhost'
-  ? 'http://localhost:8787/api'
-  : 'https://api.blog.guofeng.me/api';
+const API_BASE = '/api';
 const api = new ApiClient(API_BASE);
 window.NovaApi = api;
 

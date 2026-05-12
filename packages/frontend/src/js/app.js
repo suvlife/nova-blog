@@ -6,12 +6,18 @@
 (function () {
   'use strict';
 
-  const store = NovaStore;
-  const router = NovaRouter;
-  const api = NovaApi;
-  const H = NovaHelpers;
-  const Front = NovaFront;
-  const Admin = NovaAdmin;
+  try {
+
+  const store = window.NovaStore;
+  const router = window.NovaRouter;
+  const api = window.NovaApi;
+  const H = window.NovaHelpers;
+  const Front = window.NovaFront;
+  const Admin = window.NovaAdmin;
+
+  if (!store || !router || !api || !H || !Front || !Admin) {
+    throw new Error('核心模块加载失败: store=' + !!store + ' router=' + !!router + ' api=' + !!api + ' helpers=' + !!H + ' front=' + !!Front + ' admin=' + !!Admin);
+  }
 
   // ==================== 1. 初始化 Store ====================
 
@@ -202,7 +208,7 @@
       logoutBtn.addEventListener('click', async () => {
         H.showConfirm('确定要退出登录吗？', async () => {
           try {
-            await NovaAuth.logout();
+            await window.NovaAuth.logout();
           } catch {
             // 即使 API 调用失败也清除本地状态
           }
@@ -229,7 +235,7 @@
         }
 
         try {
-          await NovaCategories.create({
+          await window.NovaCategories.create({
             name,
             slug: slug || H.generateSlug(name),
             description
@@ -257,7 +263,7 @@
         }
 
         try {
-          await NovaTags.create({
+          await window.NovaTags.create({
             name,
             slug: slug || H.generateSlug(name)
           });
@@ -318,7 +324,7 @@
       }
 
       try {
-        await NovaSettings.update(data);
+        await window.NovaSettings.update(data);
         store.setState('siteSettings', data);
         H.showToast('设置已保存', 'success');
       } catch (err) {
@@ -387,7 +393,7 @@
       }
 
       try {
-        const result = await NovaAuth.login(username, password);
+        const result = await window.NovaAuth.login(username, password);
         const data = result.data || result;
 
         // 保存认证信息
@@ -491,10 +497,10 @@
     try {
       const editingSlug = router.getParams().slug;
       if (editingSlug) {
-        await NovaPosts.update(editingSlug, postData);
+        await window.NovaPosts.update(editingSlug, postData);
         H.showToast('文章已更新', 'success');
       } else {
-        await NovaPosts.create(postData);
+        await window.NovaPosts.create(postData);
         H.showToast(status === 'published' ? '文章已发布' : '草稿已保存', 'success');
       }
       router.navigate('/admin/posts', { replace: true });
@@ -515,7 +521,7 @@
     }
 
     try {
-      await NovaAttachments.uploadBatch(files, (percent) => {
+      await window.NovaAttachments.uploadBatch(files, (percent) => {
         if (progressBar) {
           progressBar.style.width = percent + '%';
         }
@@ -543,7 +549,7 @@
   window.deletePost = async function (id) {
     H.showConfirm('确定要删除这篇文章吗？此操作不可撤销。', async () => {
       try {
-        await NovaPosts.delete(id);
+        await window.NovaPosts.delete(id);
         H.showToast('文章已删除', 'success');
         router.navigate('/admin/posts', { replace: true });
       } catch (err) {
@@ -556,7 +562,7 @@
   window.deleteCategory = async function (id) {
     H.showConfirm('确定要删除此分类吗？', async () => {
       try {
-        await NovaCategories.delete(id);
+        await window.NovaCategories.delete(id);
         H.showToast('分类已删除', 'success');
         router.navigate('/admin/categories', { replace: true });
       } catch (err) {
@@ -569,7 +575,7 @@
   window.deleteTag = async function (id) {
     H.showConfirm('确定要删除此标签吗？', async () => {
       try {
-        await NovaTags.delete(id);
+        await window.NovaTags.delete(id);
         H.showToast('标签已删除', 'success');
         router.navigate('/admin/tags', { replace: true });
       } catch (err) {
@@ -582,7 +588,7 @@
   window.deleteAttachment = async function (id) {
     H.showConfirm('确定要删除此附件吗？', async () => {
       try {
-        await NovaAttachments.delete(id);
+        await window.NovaAttachments.delete(id);
         H.showToast('附件已删除', 'success');
         router.navigate('/admin/media', { replace: true });
       } catch (err) {
@@ -615,4 +621,12 @@
     ''
   );
   console.log('%c深空赛博风格博客系统已启动', 'color: #A29BFE; font-style: italic;');
+
+  } catch (err) {
+    console.error('[Nova Blog] 初始化失败:', err);
+    const appEl = document.getElementById('app');
+    if (appEl) {
+      appEl.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;color:#EAEAFF;font-family:sans-serif;text-align:center;padding:20px;"><div><h1 style="font-size:48px;background:linear-gradient(135deg,#6C5CE7,#00F5D4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Nova Blog</h1><p style="color:#9D9DBF;margin:16px 0;">系统初始化失败</p><p style="color:#6C6C8A;font-size:14px;max-width:400px;">' + err.message + '</p><button onclick="location.reload()" style="margin-top:20px;padding:10px 24px;background:linear-gradient(135deg,#6C5CE7,#A29BFE);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;">重新加载</button></div></div>';
+    }
+  }
 })();

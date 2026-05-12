@@ -7,8 +7,8 @@
 const NovaAdmin = (() => {
   'use strict';
 
-  const H = NovaHelpers;
-  const store = NovaStore;
+  const H = window.NovaHelpers;
+  const store = window.NovaStore;
 
   /**
    * 渲染侧边栏
